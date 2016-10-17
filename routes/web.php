@@ -11,6 +11,11 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::get('/user/{id?}', function($id = 4)
+{
+    return 'hellooo '.$id;
 });
