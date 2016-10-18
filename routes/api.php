@@ -20,14 +20,14 @@ use Illuminate\Http\Request;
 Route::group(['prefix' => 'v1'], function() {
 
     Route::resource('meeting', 'MeetingController', [
-        'except' => ['']
+        'except' => ['edit', 'create']
     ]);
-});
 
-Route::group(['prefix' => 'api/v1'], function() {
-
-    Route::post('user', [
-        'uses' => 'AuthController@store';
+    Route::resource('meeting/registration', 'RegistrationController', [
+        'only' => ['store', 'destroy']
     ]);
-});
 
+    Route::post('user', 'AuthController@store');
+
+    Route::post('user/signin', 'AuthController@signin');
+});
