@@ -18,18 +18,25 @@ class AuthController extends Controller
 
     public function signin(Request $request)
     {
-        $email = $request->input('email');
-        $password = $request->input('password');
-
+        // validation
         $this->validate($request, [
             'email' => 'required|email',
             'password' => 'required'
         ]);
 
+        $email = $request->input('email');
+        $password = $request->input('password');
+
+        // do authentication aginst database
+
+        $credentials = $request->only('email', 'password');
+
+
         $meeting = [
-            'msg' => 'Successfully logged'
+            'msg' => $credentials
         ];
 
+        // send results
         return response()->json($meeting, 200);
     }
 }
