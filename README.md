@@ -1,2 +1,0 @@
-# laravelREST
-RESTFul with Laravel
