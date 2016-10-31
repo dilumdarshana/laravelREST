@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Meeting;
+
 class MeetingController extends Controller
 {
     public function __construct()
@@ -20,7 +22,11 @@ class MeetingController extends Controller
      */
     public function index()
     {
-        return 'Helloooo';
+        $meetings = Meeting::all();
+
+        echo config('app.name');
+
+        return response()->json($meetings, 200);
     }
 
     /**
@@ -31,7 +37,54 @@ class MeetingController extends Controller
      */
     public function store(Request $request)
     {
-        return 'Hel';
+        // validation
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'time' => 'required'
+        ]);
+
+        $rules = [
+
+        ];
+
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $time = $request->input('time');
+        $userId = $request->input('user_id');
+
+        $modelMeeting = new Meeting();
+
+        $modelMeeting->title = $title;
+        $modelMeeting->description = $description;
+        $modelMeeting->time = $time;
+
+        if($modelMeeting->save()) {
+
+            $meeting = [
+
+                'title' => $modelMeeting->title,
+                'description' => $modelMeeting->description,
+                'time' => $modelMeeting->time,
+                'view_meeting' => [
+                    'url' => 'api/v1/meeting/'.$modelMeeting->id,
+                    'method' => 'GET'
+                ]
+            ];
+
+            $response = [
+                'msg' => 'Meeting created successfully',
+                'meeting' => $meeting
+            ];
+
+            return response()->json($response, 201);
+        }
+
+        $response = [
+                'msg' => 'An error occured'
+            ];
+
+        return response()->json($response, 404);
     }
 
     /**

@@ -17,7 +17,8 @@ class RegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $meetingId = $request->input('meeting_id');
+        $userId = $request->input('user_id');
     }
 
     /**
@@ -28,6 +29,7 @@ class RegistrationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $meetingId = $request->input('meeting_id');
+        $userId = $request->input('user_id');
     }
 }
