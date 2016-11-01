@@ -30,4 +30,23 @@ php artisan migrate - will create all changes against migrate scripts
 
 - Install dependancy: composer require tymon/jwt-auth
 
+- Once this has finished, you will need to add the service provider to the providers array in your app.php config as follows:
 
+Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class
+
+- Next, also in the app.php config file, under the aliases array, you may want to add the JWTAuth facade.
+
+'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class
+
+- Also included is a Facade for the PayloadFactory to the same location. This gives you finer control over the payloads you create if you require it
+
+'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory:class
+
+- Publish config (this will create config file for JWT inside config folder)
+
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\JWTAuthServiceProvider" OR
+php artisan vendor:publish
+
+- Generate key
+
+php artisan jwt:generate

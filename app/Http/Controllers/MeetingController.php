@@ -7,12 +7,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use App\Meeting;
+use JWTAuth;
 
 class MeetingController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('name');
+        $this->middleware('jwt.auth', ['only' => [
+            'store', 'update', 'destroy'
+        ]]);
     }
 
     /**
@@ -44,9 +47,6 @@ class MeetingController extends Controller
             'time' => 'required'
         ]);
 
-        $rules = [
-
-        ];
 
         $title = $request->input('title');
         $description = $request->input('description');
@@ -107,7 +107,54 @@ class MeetingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return 'patch '.$id;
+        // validation
+        $this->validate($request, [
+            'title' => 'required',
+            'description' => 'required',
+            'time' => 'required'
+        ]);
+
+        $rules = [
+
+        ];
+
+        $title = $request->input('title');
+        $description = $request->input('description');
+        $time = $request->input('time');
+        $userId = $request->input('user_id');
+
+        $meeting = Meeting::find($id);
+
+        $meeting->title = $title;
+        $meeting->description = $description;
+        $meeting->time = $time;
+
+        if($meeting->save()) {
+
+            $meeting = [
+
+                'title' => $meeting->title,
+                'description' => $meeting->description,
+                'time' => $meeting->time,
+                'view_meeting' => [
+                    'url' => 'api/v1/meeting/'.$meeting->id,
+                    'method' => 'GET'
+                ]
+            ];
+
+            $response = [
+                'msg' => 'Meeting updated successfully',
+                'meeting' => $meeting
+            ];
+
+            return response()->json($response, 200);
+        }
+
+        $response = [
+                'msg' => 'An error occured'
+            ];
+
+        return response()->json($response, 404);
     }
 
     /**
